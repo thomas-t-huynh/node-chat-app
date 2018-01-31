@@ -11,11 +11,11 @@ socket.on('connect', function () {
 
 socket.on('newMessage', function( message ) {
     console.log('newMessage', message);
-    var li = jQuery('<li></li>');
+    let li = jQuery('<li></li>');
     li.text(`${message.from}: ${message.text}`);
 
     jQuery('#messages').append(li);
-})
+});
   
 
 socket.on('disconnect', function () {
@@ -31,6 +31,22 @@ jQuery('#message-form').on('submit', function (e) {
         text: jQuery('[name=message]').val()
     }, function () {
         
+    });
+});
+
+let locationButton = jQuery('#send-location');
+locationButton.on('click', function() {
+    if (!navigator.geolocation) {
+        return alert('Geolocation not supported by your browser');
+    }
+
+    navigator.geolocation.getCurrentPosition(function (position) {
+        socket.emit('cerateLocationMessage', {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+        });
+    }, function () {
+        alert('unable to fetch location');
     })
-})
+});
 
