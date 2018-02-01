@@ -18,10 +18,32 @@ function scrollToBottom () {
 }
 
 socket.on('connect', function () {
-    console.log('Connected to server');
+    var params = jQuery.deparam(window.location.search);
 
-
+    socket.emit('join' , params , function (error) {
+        if (error) {
+            alert(error);
+            window.location.href = '/';
+        } else {
+            console.log('No error');
+        }
+    })
 });
+
+socket.on('disconnect', function () {
+    console.log('Disconnected from server');
+});
+
+socket.on('updateUserList', function (users) {
+    var ol = jQuery('<ol></ol>');
+
+    users.forEach(function (user) {
+        ol.append(jQuery('<li></li>').text(user));
+    });
+
+    jQuery('#users').html(ol);
+
+})
 
 //fist argument on socket.on is the name of the "emitter reciever - listener". Call the argument
 //To send it over to where the argument originally exists.
@@ -56,12 +78,6 @@ socket.on('newLocationMessage', function (message) {
     jQuery('#messages').append(html);
     scrollToBottom();
 })
-  
-
-socket.on('disconnect', function () {
-    console.log('Disconnected from server');
-});
-
 
 jQuery('#message-form').on('submit', function (e) {
     e.preventDefault();
