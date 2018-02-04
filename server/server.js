@@ -26,16 +26,32 @@ io.on('connection', (socket) => {
 
     socket.on('join', (params , callback) => {
 
+        let nameCheck = users.checkUser(params.name);
+
+        console.log(nameCheck);
+
+        if (nameCheck) {
+            return callback('User name already exists. Please enter a different one.')
+        }
+
         let room = params.room.toLowerCase();
 
         if (!isRealString(params.name) || !isRealString(params.room)) {
             return callback('Name and room name are required');
         }
 
+
         socket.join(room);
+        
         users.removeUser(socket.id);
+
+        
         users.addUser(socket.id , params.name, room);
 
+
+    
+
+        
 
         io.to(room).emit('updateUserList', users.getUserList(room));
         socket.emit('newMessage', generateMessage( 'admin', 'welcome to the chat app'));
@@ -74,9 +90,10 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         let user = users.removeUser(socket.id);
 
-        let room = user.room.toLowerCase();
+        
 
         if (user) {
+            let room = user.room.toLowerCase();
             io.to(room).emit('updateUserList', users.getUserList(room));;
             io.to(room).emit('newMessage', generateMessage('Admin', `${user.name} has left.`));
         }
