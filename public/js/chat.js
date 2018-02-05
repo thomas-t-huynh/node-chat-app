@@ -20,6 +20,8 @@ function scrollToBottom () {
 socket.on('connect', function () {
     var params = jQuery.deparam(window.location.search);
 
+
+
     socket.emit('join' , params , function (error) {
         if (error) {
             alert(error);
@@ -43,7 +45,8 @@ socket.on('updateUserList', function (users) {
 
     jQuery('#users').html(ol);
 
-})
+});
+
 
 //fist argument on socket.on is the name of the "emitter reciever - listener". Call the argument
 //To send it over to where the argument originally exists.
@@ -90,6 +93,8 @@ jQuery('#message-form').on('submit', function (e) {
         messageTextbox.val('');
     });
 });
+
+var roomButton = jQuery('#')
 
 var locationButton = jQuery('#send-location');
 locationButton.on('click', function() {
