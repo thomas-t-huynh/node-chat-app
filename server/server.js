@@ -22,15 +22,14 @@ io.on('connection', (socket) => {
     
     console.log('New user connected');
 
+    io.emit('updateRoomList', users.getRooms());
+
+
     
-
-
 
     socket.on('join', (params , callback) => {
 
-        let nameCheck = users.checkUser(params.name);
-
-        console.log(nameCheck);      
+        let nameCheck = users.checkUser(params.name); 
 
         if (nameCheck) {
             return callback('User name already exists. Please enter a different one.')
