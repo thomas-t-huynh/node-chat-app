@@ -32,7 +32,11 @@ class Users {
     }
 
     getRooms () {
-        return this.users.map((user) => user.room);
+        let rooms = this.users.map((user) => user.room);
+        return rooms.reduce(function(a, b){
+            if (a.indexOf(b) < 0 ) a.push(b);
+            return a;
+        },[]);
     }
 
     getUserList (room) {
